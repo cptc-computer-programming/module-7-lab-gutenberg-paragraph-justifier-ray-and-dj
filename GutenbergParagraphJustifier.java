@@ -14,11 +14,12 @@ public class GutenbergParagraphJustifier {
         console.close();
 
         // create output stream
-        System.out.println(String.format("data/output/%s_indented.txt", path));
-        PrintStream output = new PrintStream(new File(String.format("data/output/%s_indented.txt", path)));
+        String outPath = String.format("data/output/%s_indented.txt", path);
+        PrintStream output = new PrintStream(new File(outPath));
 
         // process
         justifyParagraphs(input, output);
+        System.out.printf("Processed: %s%n", outPath);
 
         // close scanners
         input.close();
