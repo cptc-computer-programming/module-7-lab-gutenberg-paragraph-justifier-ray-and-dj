@@ -56,12 +56,7 @@ public class GutenbergParagraphJustifier {
 
             // Process lines of book in here
             if (shouldRead) {
-                String newLine;
-                if (!inParagraph) { // Not already in a paragraph, so this is the first line
-                    newLine = spaces(TAB_SIZE) + line; // Indent first line
-                } else {
-                    newLine = line; // Just trim subsequent lines
-                }
+                String newLine = spaces(TAB_SIZE) + line; // Indent first line
 
                 out.println(newLine);
                 inParagraph = true; // If we are writing text we are in a paragraph
