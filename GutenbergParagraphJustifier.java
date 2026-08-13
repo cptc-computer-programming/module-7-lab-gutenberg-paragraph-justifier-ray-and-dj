@@ -15,7 +15,7 @@ public class GutenbergParagraphJustifier {
         console.close();
 
         // create output stream
-        PrintStream output = new PrintStream(new File(""))
+        PrintStream output = new PrintStream(new File(String.format("%s_indented", path)));
 
         // process
         justifyParagraphs(input, output);
@@ -31,8 +31,16 @@ public class GutenbergParagraphJustifier {
     // - indents every nonblank line by TAB_SIZE spaces
     public static void justifyParagraphs(Scanner input, PrintStream out) {
         boolean shouldRead = false;
+        boolean inParagraph = false;
         while (input.hasNextLine()) {
             String line = input.nextLine().trim(); // trim() whitespace
+            if (line.isEmpty()) {
+                if (inParagraph)
+                    out.println("");
+                
+                inParagraph = false;
+                continue;
+            }
 
             if (line.startsWith("*** START")) { // Header
                 shouldRead = true;
@@ -46,7 +54,14 @@ public class GutenbergParagraphJustifier {
 
             // Process lines of book in here
             if (shouldRead) {
-
+                String newLine;
+                if (!inParagraph) {
+                    newLine = spaces(TAB_SIZE) + line;
+                } else {
+                    newLine = line;
+                }
+                out.println(newLine);
+                inParagraph = true;
             }
         }
     }
