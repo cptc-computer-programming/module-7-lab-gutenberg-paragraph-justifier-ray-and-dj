@@ -1,5 +1,4 @@
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 import java.io.File;
@@ -15,7 +14,8 @@ public class GutenbergParagraphJustifier {
         console.close();
 
         // create output stream
-        PrintStream output = new PrintStream(new File(String.format("%s_indented", path)));
+        System.out.println(String.format("data/output/%s_indented.txt", path));
+        PrintStream output = new PrintStream(new File(String.format("data/output/%s_indented.txt", path)));
 
         // process
         justifyParagraphs(input, output);
@@ -37,7 +37,7 @@ public class GutenbergParagraphJustifier {
             if (line.isEmpty()) {
                 if (inParagraph)
                     out.println("");
-                
+
                 inParagraph = false;
                 continue;
             }
@@ -71,14 +71,17 @@ public class GutenbergParagraphJustifier {
         File input = null;
 
         do {
+            System.out.print("File path (relative): ");
             String p = console.nextLine();
             input = new File(p);
 
             if (!input.canRead()) { // Can't read
                 System.err.printf("Invalid file path: %s%n", p);
                 input = null;
+                continue;
             }
-            path = p;
+            path = input.getName();
+            path = path.substring(0, path.lastIndexOf("."));
         } while (input == null);
 
         return new Scanner(input);
