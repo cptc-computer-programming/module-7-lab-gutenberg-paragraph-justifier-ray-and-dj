@@ -5,14 +5,17 @@ import java.util.Scanner;
 import java.io.File;
 
 public class GutenbergParagraphJustifier {
-public static final int TAB_SIZE = 4;
+    public static final int TAB_SIZE = 4;
+    private static String path = null;
 
     public static void main(String[] args) throws FileNotFoundException {
         // create scanners
+        Scanner console = new Scanner(System.in);
+        Scanner input = getInputFileScanner(console); // Input FILE
+        console.close();
 
-        PrintStream output = new PrintStream(new File("data\\output\\example.txt"))
         // create output stream
-
+        PrintStream output = new PrintStream(new File(""))
 
         // process
         justifyParagraphs(input, output);
@@ -27,27 +30,43 @@ public static final int TAB_SIZE = 4;
     // - collapses multiple blank lines into ONE blank line
     // - indents every nonblank line by TAB_SIZE spaces
     public static void justifyParagraphs(Scanner input, PrintStream out) {
-        input.nextLine();
+        boolean shouldRead = false;
         while (input.hasNextLine()) {
+            String line = input.nextLine().trim(); // trim() whitespace
 
+            if (line.startsWith("*** START")) { // Header
+                shouldRead = true;
+                continue;
+            }
+
+            if (line.startsWith("*** END")) { // Footer
+                shouldRead = false;
+                continue;
+            }
+
+            // Process lines of book in here
+            if (shouldRead) {
+
+            }
         }
     }
 
     // Prompts until a readable file name is provided, then returns a Scanner on it.
-    public static Scanner getInputFileScanner(Scanner console) {
-        Scanner input = null;
+    public static Scanner getInputFileScanner(Scanner console) throws FileNotFoundException {
+        File input = null;
 
         do {
-            String path = console.nextLine();
-            try {
-                input = new Scanner(new File(path));
-            } catch (FileNotFoundException e) {
+            String p = console.nextLine();
+            input = new File(p);
+
+            if (!input.canRead()) { // Can't read
+                System.err.printf("Invalid file path: %s%n", p);
                 input = null;
-                System.err.printf("Invalid file path: %s%n", path);
             }
+            path = p;
         } while (input == null);
 
-        return input;
+        return new Scanner(input);
     }
 
     // Returns a string of n spaces (no tabs).
