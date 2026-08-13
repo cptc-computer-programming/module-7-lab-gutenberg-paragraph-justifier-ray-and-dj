@@ -30,38 +30,40 @@ public class GutenbergParagraphJustifier {
     // - collapses multiple blank lines into ONE blank line
     // - indents every nonblank line by TAB_SIZE spaces
     public static void justifyParagraphs(Scanner input, PrintStream out) {
-        boolean shouldRead = false;
-        boolean inParagraph = false;
+        boolean shouldRead = false; // Whether we are inside *** START and *** END (book content)
+        boolean inParagraph = false; // Whether we are in a paragraph, or inbetween blank lines and looking for one
+
         while (input.hasNextLine()) {
             String line = input.nextLine().trim(); // trim() whitespace
             if (line.isEmpty()) {
-                if (inParagraph)
+                if (inParagraph) // Add one blank line at the end of a paragraph
                     out.println("");
 
-                inParagraph = false;
+                inParagraph = false; // When not in a paragraph this will consume extra blank lines
                 continue;
             }
 
             if (line.startsWith("*** START")) { // Header
-                shouldRead = true;
+                shouldRead = true; // Main book content entered
                 continue;
             }
 
             if (line.startsWith("*** END")) { // Footer
-                shouldRead = false;
+                shouldRead = false; // Main book content exited
                 continue;
             }
 
             // Process lines of book in here
             if (shouldRead) {
                 String newLine;
-                if (!inParagraph) {
-                    newLine = spaces(TAB_SIZE) + line;
+                if (!inParagraph) { // Not already in a paragraph, so this is the first line
+                    newLine = spaces(TAB_SIZE) + line; // Indent first line
                 } else {
-                    newLine = line;
+                    newLine = line; // Just trim subsequent lines
                 }
+
                 out.println(newLine);
-                inParagraph = true;
+                inParagraph = true; // If we are writing text we are in a paragraph
             }
         }
     }
