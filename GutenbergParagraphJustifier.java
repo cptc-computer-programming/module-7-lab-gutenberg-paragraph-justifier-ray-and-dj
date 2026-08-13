@@ -1,4 +1,5 @@
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 import java.io.File;
@@ -8,14 +9,17 @@ public static final int TAB_SIZE = 4;
 
     public static void main(String[] args) throws FileNotFoundException {
         // create scanners
-        Scanner input = new Scanner(new File("data\\input\\example.txt"));
+
+        PrintStream output = new PrintStream(new File("data\\output\\example.txt"))
         // create output stream
 
 
         // process
+        justifyParagraphs(input, output);
 
         // close scanners
         input.close();
+        output.close();
     }
 
     // Reads the input text and writes a "justified" version:
@@ -25,17 +29,29 @@ public static final int TAB_SIZE = 4;
     public static void justifyParagraphs(Scanner input, PrintStream out) {
         input.nextLine();
         while (input.hasNextLine()) {
-            
+
         }
     }
 
     // Prompts until a readable file name is provided, then returns a Scanner on it.
-    public static Scanner getInputFileScanner(Scanner console) throws FileNotFoundException {
-        return new Scanner(System.in);
+    public static Scanner getInputFileScanner(Scanner console) {
+        Scanner input = null;
+
+        do {
+            String path = console.nextLine();
+            try {
+                input = new Scanner(new File(path));
+            } catch (FileNotFoundException e) {
+                input = null;
+                System.err.printf("Invalid file path: %s%n", path);
+            }
+        } while (input == null);
+
+        return input;
     }
 
     // Returns a string of n spaces (no tabs).
     public static String spaces(int n) {
-        return "";
+        return " ".repeat(n);
     }
 }
